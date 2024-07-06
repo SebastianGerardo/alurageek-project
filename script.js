@@ -6,11 +6,30 @@ const productsContainer = document.getElementById("productsContainer");
 let allProducts = JSON.parse(localStorage.getItem("productsAdded")) || [];
 const clearButton = document.getElementById("clearButton");
 
-function deleteProduct(id) {
-  allProducts = allProducts.filter((product) => product.id !== id);
-  localStorage.setItem("productsAdded", JSON.stringify(allProducts));
-  displayProducts();
-}
+formProduct.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const nombre = nombreInput.value.trim();
+  const precio = precioInput.value.trim();
+  const imagen = imagenInput.value.trim();
+
+  if (nombre && precio && imagen) {
+    const product = {
+      nombre,
+      precio,
+      imagen,
+    };
+
+    saveProduct(product);
+    displayProducts();
+
+    nombreInput.value = "";
+    precioInput.value = "";
+    imagenInput.value = "";
+  }
+});
+
+clearButton.addEventListener("click", clearProducts);
 
 function createProduct(product) {
   const productCard = document.createElement("div");
@@ -38,6 +57,18 @@ function saveProduct(product) {
   localStorage.setItem("productsAdded", JSON.stringify(allProducts));
 }
 
+function clearProducts() {
+  allProducts = [];
+  localStorage.removeItem("productsAdded");
+  displayProducts();
+}
+
+function deleteProduct(id) {
+  allProducts = allProducts.filter((product) => product.id !== id);
+  localStorage.setItem("productsAdded", JSON.stringify(allProducts));
+  displayProducts();
+}
+
 function displayProducts() {
   productsContainer.innerHTML = "";
   if (allProducts.length > 0) {
@@ -51,35 +82,4 @@ function displayProducts() {
   }
 }
 
-function clearProducts() {
-  allProducts = [];
-  localStorage.removeItem("productsAdded");
-  displayProducts();
-}
-
 displayProducts();
-
-clearButton.addEventListener("click", clearProducts);
-
-formProduct.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const nombre = nombreInput.value.trim();
-  const precio = precioInput.value.trim();
-  const imagen = imagenInput.value.trim();
-
-  if (nombre && precio && imagen) {
-    const product = {
-      nombre,
-      precio,
-      imagen,
-    };
-
-    saveProduct(product);
-    displayProducts();
-
-    nombreInput.value = "";
-    precioInput.value = "";
-    imagenInput.value = "";
-  }
-});
